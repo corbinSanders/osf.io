@@ -31,7 +31,7 @@ from rest_framework import serializers as ser
 from rest_framework import exceptions
 from addons.base.exceptions import InvalidAuthError, InvalidFolderError
 from addons.osfstorage.models import Region
-from osf.exceptions import NodeStateError
+from osf.exceptions import NodeStateError, BlacklistedEmailError
 from osf.models import (
     Comment, DraftRegistration, Institution,
     RegistrationSchema, AbstractNode, PrivateLink,
@@ -40,6 +40,7 @@ from osf.models import (
 from osf.models.external import ExternalAccount
 from osf.models.licenses import NodeLicense
 from osf.models.preprint import Preprint
+from osf.models.validators import validate_email
 from website.project import new_private_link
 from website.project.metadata.schemas import LATEST_SCHEMA_VERSION
 from website.project.metadata.utils import is_prereg_admin_not_project_admin
@@ -646,10 +647,13 @@ class NodeSerializer(TaxonomizableSerializerMixin, JSONAPISerializer):
         tag_instances = []
         affiliated_institutions = None
         region_id = None
+        license_details = None
         if 'affiliated_institutions' in validated_data:
             affiliated_institutions = validated_data.pop('affiliated_institutions')
         if 'region_id' in validated_data:
             region_id = validated_data.pop('region_id')
+        if 'license_type' in validated_data or 'license' in validated_data:
+            license_details = validated_data.pop('license')
         if 'tag_names' in validated_data:
             tags = validated_data.pop('tag_names')
             for tag in tags:
@@ -698,6 +702,17 @@ class NodeSerializer(TaxonomizableSerializerMixin, JSONAPISerializer):
             parent = validated_data['parent']
             node.subjects.add(parent.subjects.all())
             node.save()
+
+        if license_details:
+            node.set_node_license(
+                {
+                    'id': license_details.get('id') if license_details.get('id') else 'NONE',
+                    'year': license_details.get('year'),
+                    'copyrightHolders': license_details.get('copyrightHolders') or license_details.get('copyright_holders', []),
+                },
+                auth=get_user_auth(request),
+                save=True,
+            )
 
         if not region_id:
             region_id = self.context.get('region_id')
@@ -1094,6 +1109,11 @@ class NodeContributorsCreateSerializer(NodeContributorsSerializer):
             raise exceptions.ValidationError(detail='A user ID or full name must be provided to add a contributor.')
         if user_id and email:
             raise exceptions.ValidationError(detail='Do not provide an email when providing this user_id.')
+        if email:
+            try:
+                validate_email(email)
+            except BlacklistedEmailError:
+                raise exceptions.ValidationError(detail='Invalid Email Error')
         if index > len(node.contributors):
             raise exceptions.ValidationError(detail='{} is not a valid contributor index for node with id {}'.format(index, node._id))
 
