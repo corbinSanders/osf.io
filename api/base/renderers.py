@@ -41,6 +41,7 @@ class BrowsableAPIRendererNoForms(BrowsableAPIRenderer):
     """
 
     def show_form_for_method(self, view, method, request, obj):
+        #  This keeps the forms from being rendered, which we never want to do.
         return False
 
 

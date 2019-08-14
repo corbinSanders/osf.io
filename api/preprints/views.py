@@ -224,7 +224,6 @@ class PreprintNodeRelationship(JSONAPIBaseView, generics.RetrieveUpdateAPIView, 
         }
         return obj
 
-
 class PreprintCitationDetail(JSONAPIBaseView, generics.RetrieveAPIView, PreprintMixin):
     """The documentation for this endpoint can be found [here](https://developer.osf.io/#operation/preprints_citation_list).
     """

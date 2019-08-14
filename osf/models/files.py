@@ -106,6 +106,7 @@ class BaseFileNode(TypedModel, CommentableMixin, OptionalGuidMixin, Taggable, Ob
 
     is_deleted = False
     deleted_on = NonNaiveDateTimeField(blank=True, null=True)
+    deleted = NonNaiveDateTimeField(blank=True, null=True)
     deleted_by = models.ForeignKey('osf.OSFUser', related_name='files_deleted_by', null=True, blank=True, on_delete=models.CASCADE)
 
     objects = BaseFileNodeManager()
@@ -403,7 +404,9 @@ class BaseFileNode(TypedModel, CommentableMixin, OptionalGuidMixin, Taggable, Ob
         :return:
         """
         self.deleted_by = user
+        #This will need to be removed
         self.deleted_on = deleted_on = deleted_on or timezone.now()
+        self.deleted = deleted_on = deleted_on or timezone.now()
 
         if not self.is_file:
             self.recast(TrashedFolder._typedmodels_type)
@@ -614,9 +617,13 @@ class UnableToDelete(Exception):
 
 class TrashedFileNode(BaseFileNode):
     is_deleted = True
+    #deleted = timezone.now()
     _provider = None
 
     def delete(self, user=None, parent=None, save=True, deleted_on=None):
+        self.deleted = deleted_on or timezone.now()
+        if save:
+            self.save()
         if isinstance(self, TrashedFileNode):  # TODO Why is this needed
             raise UnableToDelete('You cannot delete things that are deleted.')
 
@@ -691,7 +698,7 @@ class TrashedFolder(TrashedFileNode):
         :param recursive:
         :param parent:
         :param save:
-        :param deleted_on:
+        :param deleted:
         :return:
         """
         tf = super(TrashedFolder, self).restore(recursive=True, parent=None, save=True, deleted_on=None)

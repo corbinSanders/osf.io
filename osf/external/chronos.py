@@ -78,7 +78,6 @@ class ChronosSerializer(object):
                 }
             ],
             'UNDERLYING_DATASET_URL': preprint.node.absolute_url if preprint.node else '',
-            'LICENSE': preprint.license.node_license.name.upper() if preprint.license and preprint.license.node_license.name != 'No license' else 'NL',
         }
 
     @classmethod
@@ -182,7 +181,7 @@ class ChronosClient(object):
     def submit_manuscript(self, journal, preprint, submitter):
         submission_qs = ChronosSubmission.objects.filter(preprint=preprint)
         if submission_qs.filter(journal=journal).exists():
-            raise ValueError('This preprint already has an existing submission to {!r}.'.format(str(journal.title)))
+            raise ValueError('{!r} already has an existing submission to {!r}.'.format(preprint, journal))
 
         # 1 = draft, 2 = submitted, 3 = accepted, 4 = published
         # Disallow submission if the current preprint has submissions that are submitted, accepted or publishes
