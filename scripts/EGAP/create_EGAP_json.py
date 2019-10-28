@@ -8,7 +8,6 @@ import re
 import jsonschema
 import argparse
 
-from django.core.management.base import BaseCommand
 from jsonschema.exceptions import ValidationError
 
 from website.project.metadata.utils import create_jsonschema_from_metaschema
@@ -146,7 +145,7 @@ def make_registration_dict(row, normalized_header_row):
 
     for question in schema_to_spreadsheet_mapping:
         qid = question.keys()[0]
-        column_name = question.values()[0]
+        column_name = question.values()[0].strip("\"")
         value = build_question_response(normalized_header_row, row, qid, column_name)
         validated_qid, other_response = validate_response(qid, value)
         registration[validated_qid] = value
@@ -182,6 +181,7 @@ def build_question_response(header_row, row, question_key, column_title):
 
 def clean_value(value):
     """Clean spreadsheet values of issues that will affect validation """
+    value = value.strip("\"")
     if value == 'n/a':
         return 'N/A'
     elif value == 'Design was registered before field was added':
