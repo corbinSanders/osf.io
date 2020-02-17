@@ -141,7 +141,6 @@ class AbstractNodeQuerySet(GuidMixinQuerySet):
                 return AbstractNode.objects.filter(id__in=row)
 
     def can_view(self, user=None, private_link=None):
-        qs = self.filter(is_public=True)
 
         if private_link is not None:
             if isinstance(private_link, PrivateLink):
@@ -149,12 +148,12 @@ class AbstractNodeQuerySet(GuidMixinQuerySet):
             if not isinstance(private_link, basestring):
                 raise TypeError('"private_link" must be either {} or {}. Got {!r}'.format(str, PrivateLink, private_link))
 
-            qs |= self.filter(private_links__is_deleted=False, private_links__key=private_link)
+            qs = self.filter(private_links__is_deleted=False, private_links__key=private_link)
 
-        if user is not None and not isinstance(user, AnonymousUser):
+        elif user is not None and not isinstance(user, AnonymousUser):
             read_user_query = get_objects_for_user(user, READ_NODE, self, with_superuser=False)
-            qs |= read_user_query
-            qs |= self.extra(where=["""
+            qs = read_user_query
+            qs = self.extra(where=["""
                 "osf_abstractnode".id in (
                     WITH RECURSIVE implicit_read AS (
                         SELECT N.id as node_id
@@ -173,7 +172,7 @@ class AbstractNodeQuerySet(GuidMixinQuerySet):
                     ) SELECT * FROM implicit_read
                 )
             """], params=(user.id, ))
-        return qs.filter(is_deleted=False)
+        return qs.filter(is_deleted=False).filter(is_public=True)
 
 
 class AbstractNodeManager(TypedModelManager, IncludeManager):
