@@ -4,16 +4,16 @@ from __future__ import unicode_literals
 
 from django.db import migrations
 
-from osf import features
+from osf.features import flags
 from osf.utils.migrations import AddWaffleFlags
 
 
 USER_SETTINGS_FLAGS = [
-    features.EMBER_USER_SETTINGS_ACCOUNTS,
-    features.EMBER_USER_SETTINGS_ADDONS,
-    features.EMBER_USER_SETTINGS_APPS,
-    features.EMBER_USER_SETTINGS_NOTIFICATIONS,
-    features.EMBER_USER_SETTINGS_TOKENS,
+    flags['EMBER_USER_SETTINGS_ACCOUNTS'],
+    flags['EMBER_USER_SETTINGS_ADDONS'],
+    flags['EMBER_USER_SETTINGS_APPS'],
+    flags['EMBER_USER_SETTINGS_NOTIFICATIONS'],
+    flags['EMBER_USER_SETTINGS_TOKENS'],
 ]
 
 

@@ -2,7 +2,7 @@ import mock
 import pytest
 from waffle.testutils import override_switch
 
-from osf import features
+from osf.features import switches
 from api.base.settings.defaults import API_BASE
 from osf_tests.factories import (
     AuthUserFactory,
@@ -73,7 +73,7 @@ class TestPreprintProviderListWithMetrics:
     # enable the ELASTICSEARCH_METRICS switch for all tests
     @pytest.fixture(autouse=True)
     def enable_elasticsearch_metrics(self):
-        with override_switch(features.ELASTICSEARCH_METRICS, active=True):
+        with override_switch(switches['ELASTICSEARCH_METRICS'], active=True):
             yield
 
     def test_preprint_provider_list_with_metrics(self, app, url, provider_one, provider_two):

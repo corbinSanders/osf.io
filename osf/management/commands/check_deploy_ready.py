@@ -7,7 +7,7 @@ any of them error.
 from django.core.management.base import BaseCommand
 from django.core.management import call_command
 import waffle
-from osf import features
+from osf.features import switches
 
 
 class Command(BaseCommand):
@@ -17,7 +17,7 @@ class Command(BaseCommand):
             ['checkmigrations'],
         ]
 
-        if waffle.switch_is_active(features.ELASTICSEARCH_METRICS):
+        if waffle.switch_is_active(switches['ELASTICSEARCH_METRICS']):
             CHECKS.append(['check_metrics'])
         for check in CHECKS:
             call_command(*check)

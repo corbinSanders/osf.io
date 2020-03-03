@@ -1,7 +1,7 @@
 import waffle
 
 from framework.auth.core import _get_current_user
-from osf import features
+from osf.features import flags
 from flask import request
 
 
@@ -23,8 +23,8 @@ def flag_is_active(request, flag_name):
 
 
 def storage_i18n_flag_active():
-    return flag_is_active(request, features.STORAGE_I18N)
+    return flag_is_active(request, flags['STORAGE_I18N'])
 
 
 def storage_usage_flag_active():
-    return flag_is_active(request, features.STORAGE_USAGE)
+    return flag_is_active(request, flags['STORAGE_USAGE'])

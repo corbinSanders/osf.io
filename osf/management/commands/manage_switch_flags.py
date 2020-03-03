@@ -9,8 +9,8 @@ from waffle.models import Flag, Switch
 logger = logging.getLogger(__name__)
 
 def manage_waffle():
-    file_switches = [getattr(switches, switch) for switch in dir(switches) if '__' not in switch]
-    current_switches = [switch.name for switch in Switch.objects.values_list('name', flat=True)]
+    file_switches = [switches[switch] for switch in switches]
+    current_switches = Switch.objects.values_list('name', flat=True)
 
     add_switches = set(file_switches) - set(current_switches)
     for switch in add_switches:
@@ -21,8 +21,8 @@ def manage_waffle():
     Switch.objects.filter(name__in=delete_switches).delete()
     logger.info('Deleting switches: {}'.format(delete_switches))
 
-    file_flags = [getattr(flags, flag) for flag in dir(flags) if '__' not in flag]
-    current_flags = [flag.name for flag in Flag.objects.all()]
+    file_flags = [flags[flag] for flag in flags]
+    current_flags = Flag.objects.values_list('name', flat=True)
 
     add_flags = set(file_flags) - set(current_flags)
     for flag_name in add_flags:

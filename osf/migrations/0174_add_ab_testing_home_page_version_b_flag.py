@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 from django.db import migrations
 
-from osf import features
+from osf.features import flags
 from osf.utils.migrations import AddWaffleFlags
 
 class Migration(migrations.Migration):
@@ -13,5 +13,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        AddWaffleFlags([features.EMBER_AB_TESTING_HOME_PAGE_VERSION_B]),
+        AddWaffleFlags([flags['EMBER_AB_TESTING_HOME_PAGE_VERSION_B']]),
     ]

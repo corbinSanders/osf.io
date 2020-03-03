@@ -22,7 +22,7 @@ from framework.routing import proxy_url
 from website import settings
 from website.institutions.views import serialize_institution
 
-from osf import features
+from osf.features import flags
 from osf.models import BaseFileNode, Guid, Institution, Preprint, AbstractNode, Node, DraftNode, Registration
 from addons.osfstorage.models import Region
 
@@ -172,7 +172,7 @@ def dashboard(auth):
 
 
 @must_be_logged_in
-@ember_flag_is_active(features.EMBER_MY_PROJECTS)
+@ember_flag_is_active(flags['EMBER_MY_PROJECTS'])
 def my_projects(auth):
     user = auth.user
 
@@ -323,7 +323,7 @@ def resolve_guid(guid, suffix=None):
         if isinstance(referent, Registration) and (
                 not suffix or suffix.rstrip('/').lower() in ('comments', 'links', 'components')
         ):
-            if flag_is_active(request, features.EMBER_REGISTRIES_DETAIL_PAGE):
+            if flag_is_active(request, flags['EMBER_REGISTRIES_DETAIL_PAGE']):
                 # Route only the base detail view to ember
                 if PROXY_EMBER_APPS:
                     resp = requests.get(EXTERNAL_EMBER_APPS['ember_osf_web']['server'], stream=True, timeout=EXTERNAL_EMBER_SERVER_TIMEOUT)

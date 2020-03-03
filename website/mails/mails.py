@@ -25,7 +25,7 @@ import waffle
 from mako.lookup import TemplateLookup, Template
 
 from framework.email import tasks
-from osf import features
+from osf.features import switches
 from website import settings
 
 logger = logging.getLogger(__name__)
@@ -96,7 +96,7 @@ def send_mail(
     .. note:
          Uses celery if available
     """
-    if waffle.switch_is_active(features.DISABLE_ENGAGEMENT_EMAILS) and mail.engagement:
+    if waffle.switch_is_active(switches['DISABLE_ENGAGEMENT_EMAILS']) and mail.engagement:
         return False
 
     from_addr = from_addr or settings.FROM_EMAIL

@@ -15,7 +15,7 @@ from waffle.testutils import override_switch
 
 from framework.exceptions import HTTPError
 
-from osf import features
+from osf.features import switches
 from osf.models import RegistrationSchema, DraftRegistration
 from osf.utils import permissions
 from website.project.metadata.schemas import _name_to_id
@@ -474,7 +474,7 @@ class TestDraftRegistrationViews(RegistrationsTestBase):
 
     def test_prereg_challenge_over(self):
         url = self.draft_api_url('submit_draft_for_review')
-        with override_switch(features.OSF_PREREGISTRATION, active=True):
+        with override_switch(switches['OSF_PREREGISTRATION'], active=True):
             res = self.app.post_json(
                 url,
                 self.embargo_payload,

@@ -21,7 +21,7 @@ from api.osf_groups.serializers import (
 )
 from api.users.views import UserMixin
 from framework.auth.oauth_scopes import CoreScopes
-from osf.features import OSF_GROUPS
+from osf.features import flags
 from osf.models import OSFGroup, OSFUser
 from osf.utils.permissions import MANAGER, GROUP_ROLES
 
@@ -64,7 +64,7 @@ class GroupList(GroupBaseView, generics.ListCreateAPIView, ListFilterMixin):
     view_name = 'group-list'
     ordering = ('-modified', )
 
-    @require_flag(OSF_GROUPS)
+    @require_flag(flags['OSF_GROUPS'])
     def get_default_queryset(self):
         user = self.request.user
         if user.is_anonymous:
@@ -76,7 +76,7 @@ class GroupList(GroupBaseView, generics.ListCreateAPIView, ListFilterMixin):
         return self.get_queryset_from_request()
 
     # overrides ListCreateAPIView
-    @require_flag(OSF_GROUPS)
+    @require_flag(flags['OSF_GROUPS'])
     def perform_create(self, serializer):
         """Create an OSFGroup.
 
@@ -98,12 +98,12 @@ class GroupDetail(GroupBaseView, generics.RetrieveUpdateDestroyAPIView):
     view_name = 'group-detail'
 
     # Overrides RetrieveUpdateDestroyAPIView
-    @require_flag(OSF_GROUPS)
+    @require_flag(flags['OSF_GROUPS'])
     def get_object(self):
         return self.get_osf_group()
 
     # Overrides RetrieveUpdateDestroyAPIView
-    @require_flag(OSF_GROUPS)
+    @require_flag(flags['OSF_GROUPS'])
     def perform_destroy(self, instance):
         auth = get_user_auth(self.request)
         instance.remove_group(auth=auth)
@@ -142,7 +142,7 @@ class OSFGroupMemberBaseView(JSONAPIBaseView, OSFGroupMixin):
             return GroupMemberSerializer
 
     # overrides DestroyAPIView
-    @require_flag(OSF_GROUPS)
+    @require_flag(flags['OSF_GROUPS'])
     def perform_destroy(self, instance):
         group = self.get_osf_group()
         auth = get_user_auth(self.request)
@@ -173,7 +173,7 @@ class GroupMembersList(OSFGroupMemberBaseView, bulk_views.BulkUpdateJSONAPIView,
         return queryset
 
     # Overrides ListFilterMixin
-    @require_flag(OSF_GROUPS)
+    @require_flag(flags['OSF_GROUPS'])
     def get_default_queryset(self):
         # Returns all members and managers of the OSF Group (User objects)
         return self.get_osf_group().members
@@ -216,7 +216,7 @@ class GroupMembersList(OSFGroupMemberBaseView, bulk_views.BulkUpdateJSONAPIView,
             return Q(id__in=group.managers if role == MANAGER else group.members_only)
         return super(GroupMembersList, self).build_query_from_field(field_name, operation)
 
-    @require_flag(OSF_GROUPS)
+    @require_flag(flags['OSF_GROUPS'])
     def perform_create(self, serializer):
         return super(GroupMembersList, self).perform_create(serializer)
 
@@ -230,7 +230,7 @@ class GroupMemberDetail(OSFGroupMemberBaseView, generics.RetrieveUpdateDestroyAP
     view_name = 'group-member-detail'
 
     # Overrides RetrieveUpdateDestroyAPIView
-    @require_flag(OSF_GROUPS)
+    @require_flag(flags['OSF_GROUPS'])
     def get_object(self):
         user = self.get_user()
         self._assert_member_belongs_to_group(user)

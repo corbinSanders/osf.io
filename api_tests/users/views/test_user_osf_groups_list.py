@@ -6,7 +6,7 @@ from osf_tests.factories import (
     AuthUserFactory,
     OSFGroupFactory,
 )
-from osf.features import OSF_GROUPS
+from osf.features import flags
 
 
 @pytest.fixture()
@@ -45,7 +45,7 @@ class TestUserGroupList:
         return '/{}users/{}/groups/'.format(API_BASE, member._id)
 
     def test_return_manager_groups(self, app, member, manager, user, osf_group, second_osf_group, manager_url):
-        with override_flag(OSF_GROUPS, active=True):
+        with override_flag(flags['OSF_GROUPS'], active=True):
             # test nonauthenticated
             res = app.get(manager_url)
             assert res.status_code == 200
@@ -73,7 +73,7 @@ class TestUserGroupList:
             assert second_osf_group._id in ids
 
     def test_groups_filter(self, app, member, manager, user, osf_group, second_osf_group, manager_url):
-        with override_flag(OSF_GROUPS, active=True):
+        with override_flag(flags['OSF_GROUPS'], active=True):
             res = app.get(manager_url + '?filter[name]=Platform', auth=manager.auth)
             assert res.status_code == 200
             data = res.json['data']
@@ -89,7 +89,7 @@ class TestUserGroupList:
             assert res.status_code == 400
 
     def test_return_member_groups(self, app, member, manager, user, osf_group, second_osf_group, member_url):
-        with override_flag(OSF_GROUPS, active=True):
+        with override_flag(flags['OSF_GROUPS'], active=True):
             # test nonauthenticated
             res = app.get(member_url)
             assert res.status_code == 200

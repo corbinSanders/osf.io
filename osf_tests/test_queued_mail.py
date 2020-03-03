@@ -10,7 +10,7 @@ from website.prereg.utils import get_prereg_schema
 
 from .factories import UserFactory, NodeFactory, DraftRegistrationFactory
 
-from osf.features import DISABLE_ENGAGEMENT_EMAILS
+from osf.features import switches
 from osf.models.queued_mail import (
     queue_mail, WELCOME_OSF4M,
     NO_LOGIN, NO_ADDON, NEW_PUBLIC_PROJECT
@@ -162,13 +162,13 @@ class TestQueuedMail:
         assert mail.send_mail() is False
 
     def test_disabled_queued_emails_not_sent_if_switch_active(self, user):
-        with override_switch(DISABLE_ENGAGEMENT_EMAILS, active=True):
+        with override_switch(switches['DISABLE_ENGAGEMENT_EMAILS'], active=True):
             assert self.queue_mail(mail=NO_ADDON, user=user) is False
             assert self.queue_mail(mail=NO_LOGIN, user=user) is False
             assert self.queue_mail(mail=WELCOME_OSF4M, user=user) is False
             assert self.queue_mail(mail=NEW_PUBLIC_PROJECT, user=user) is False
 
     def test_disabled_triggered_emails_not_sent_if_switch_active(self):
-        with override_switch(DISABLE_ENGAGEMENT_EMAILS, active=True):
+        with override_switch(switches['DISABLE_ENGAGEMENT_EMAILS'], active=True):
             assert mails.send_mail(to_addr='', mail=mails.WELCOME) is False
             assert mails.send_mail(to_addr='', mail=mails.WELCOME_OSF4I) is False

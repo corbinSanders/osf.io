@@ -9,7 +9,7 @@ from django.utils import timezone
 from waffle.testutils import override_switch
 from elasticsearch.exceptions import RequestError
 
-from osf import features
+from osf.features import switches
 from api.base.settings import API_PRIVATE_BASE as API_BASE
 from osf.metrics import PreprintDownload, PreprintView
 from osf_tests.factories import AuthUserFactory, PreprintFactory, NodeFactory
@@ -23,7 +23,7 @@ class TestPreprintMetrics:
 
     @pytest.fixture(autouse=True)
     def enable_elasticsearch_metrics(self):
-        with override_switch(features.ELASTICSEARCH_METRICS, active=True):
+        with override_switch(switches['ELASTICSEARCH_METRICS'], active=True):
             yield
 
     @pytest.fixture

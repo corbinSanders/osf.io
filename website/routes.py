@@ -34,7 +34,7 @@ from framework.auth import views as auth_views
 from framework.routing import render_mako_string
 from framework.auth.core import _get_current_user
 
-from osf import features
+from osf.features import flags, switches
 from osf.models import Institution
 from osf.utils import sanitize
 from osf.utils import permissions
@@ -100,6 +100,10 @@ def get_globals():
     else:
         request_login_url = request.url
 
+    features = {}
+    features.update(flags)
+    features.update(switches)
+
     return {
         'private_link_anonymous': is_private_link_anonymous_view(),
         'user_name': user.username if user else '',
@@ -156,7 +160,7 @@ def get_globals():
                 'write_key': settings.KEEN['private']['write_key'],
             },
         },
-        'institutional_landing_flag': flag_is_active(request, features.INSTITUTIONAL_LANDING_FLAG),
+        'institutional_landing_flag': flag_is_active(request, flags['INSTITUTIONAL_LANDING_FLAG']),
         'maintenance': maintenance.get_maintenance(),
         'recaptcha_site_key': settings.RECAPTCHA_SITE_KEY,
         'custom_citations': settings.CUSTOM_CITATIONS,

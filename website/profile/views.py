@@ -22,7 +22,7 @@ from framework.flask import redirect  # VOL-aware redirect
 from framework.status import push_status_message
 from framework.utils import throttle_period_expired
 
-from osf import features
+from osf.features import flags
 from osf.models import ApiOAuth2Application, ApiOAuth2PersonalToken, OSFUser, QuickFilesNode
 from osf.exceptions import BlacklistedEmailError
 from osf.utils.requests import string_type_request_headers
@@ -258,7 +258,7 @@ def profile_view_id_json(uid, auth):
     return _profile_view(user, is_profile)
 
 @must_be_logged_in
-@ember_flag_is_active(features.EMBER_USER_PROFILE)
+@ember_flag_is_active(flags['EMBER_USER_PROFILE'])
 def profile_view(auth):
     # Embed node data, so profile node lists can be rendered
     return _profile_view(auth.user, True, include_node_counts=True)
@@ -273,7 +273,7 @@ def profile_view_id(uid, auth):
 
 
 @must_be_logged_in
-@ember_flag_is_active(features.EMBER_USER_SETTINGS)
+@ember_flag_is_active(flags['EMBER_USER_SETTINGS'])
 def user_profile(auth, **kwargs):
     user = auth.user
     return {
@@ -283,7 +283,7 @@ def user_profile(auth, **kwargs):
 
 
 @must_be_logged_in
-@ember_flag_is_active(features.EMBER_USER_SETTINGS_ACCOUNTS)
+@ember_flag_is_active(flags['EMBER_USER_SETTINGS_ACCOUNTS'])
 def user_account(auth, **kwargs):
     user = auth.user
     user_addons = addon_utils.get_addons_by_config_type('user', user)
@@ -302,7 +302,7 @@ def user_account(auth, **kwargs):
 
 
 @must_be_logged_in
-@ember_flag_is_active(features.EMBER_USER_SETTINGS_ACCOUNTS)
+@ember_flag_is_active(flags['EMBER_USER_SETTINGS_ACCOUNTS'])
 def user_account_password(auth, **kwargs):
     user = auth.user
     old_password = request.form.get('old_password', None)
@@ -341,7 +341,7 @@ def user_account_password(auth, **kwargs):
 
 
 @must_be_logged_in
-@ember_flag_is_active(features.EMBER_USER_SETTINGS_ADDONS)
+@ember_flag_is_active(flags['EMBER_USER_SETTINGS_ADDONS'])
 def user_addons(auth, **kwargs):
 
     user = auth.user
@@ -359,7 +359,7 @@ def user_addons(auth, **kwargs):
     return ret
 
 @must_be_logged_in
-@ember_flag_is_active(features.EMBER_USER_SETTINGS_NOTIFICATIONS)
+@ember_flag_is_active(flags['EMBER_USER_SETTINGS_NOTIFICATIONS'])
 def user_notifications(auth, **kwargs):
     """Get subscribe data from user"""
     return {
@@ -367,7 +367,7 @@ def user_notifications(auth, **kwargs):
     }
 
 @must_be_logged_in
-@ember_flag_is_active(features.EMBER_USER_SETTINGS_APPS)
+@ember_flag_is_active(flags['EMBER_USER_SETTINGS_APPS'])
 def oauth_application_list(auth, **kwargs):
     """Return app creation page with list of known apps. API is responsible for tying list to current user."""
     app_list_url = api_v2_url('applications/')
@@ -376,7 +376,7 @@ def oauth_application_list(auth, **kwargs):
     }
 
 @must_be_logged_in
-@ember_flag_is_active(features.EMBER_USER_SETTINGS_APPS)
+@ember_flag_is_active(flags['EMBER_USER_SETTINGS_APPS'])
 def oauth_application_register(auth, **kwargs):
     """Register an API application: blank form view"""
     app_list_url = api_v2_url('applications/')  # POST request to this url
@@ -384,7 +384,7 @@ def oauth_application_register(auth, **kwargs):
             'app_detail_url': ''}
 
 @must_be_logged_in
-@ember_flag_is_active(features.EMBER_USER_SETTINGS_APPS)
+@ember_flag_is_active(flags['EMBER_USER_SETTINGS_APPS'])
 def oauth_application_detail(auth, **kwargs):
     """Show detail for a single OAuth application"""
     client_id = kwargs.get('client_id')
@@ -406,7 +406,7 @@ def oauth_application_detail(auth, **kwargs):
             'app_detail_url': app_detail_url}
 
 @must_be_logged_in
-@ember_flag_is_active(features.EMBER_USER_SETTINGS_TOKENS)
+@ember_flag_is_active(flags['EMBER_USER_SETTINGS_TOKENS'])
 def personal_access_token_list(auth, **kwargs):
     """Return token creation page with list of known tokens. API is responsible for tying list to current user."""
     token_list_url = api_v2_url('tokens/')
@@ -415,7 +415,7 @@ def personal_access_token_list(auth, **kwargs):
     }
 
 @must_be_logged_in
-@ember_flag_is_active(features.EMBER_USER_SETTINGS_TOKENS)
+@ember_flag_is_active(flags['EMBER_USER_SETTINGS_TOKENS'])
 def personal_access_token_register(auth, **kwargs):
     """Register a personal access token: blank form view"""
     token_list_url = api_v2_url('tokens/')  # POST request to this url
@@ -424,7 +424,7 @@ def personal_access_token_register(auth, **kwargs):
             'scope_options': get_available_scopes()}
 
 @must_be_logged_in
-@ember_flag_is_active(features.EMBER_USER_SETTINGS_TOKENS)
+@ember_flag_is_active(flags['EMBER_USER_SETTINGS_TOKENS'])
 def personal_access_token_detail(auth, **kwargs):
     """Show detail for a single personal access token"""
     _id = kwargs.get('_id')

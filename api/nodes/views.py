@@ -126,7 +126,7 @@ from api.users.serializers import UserSerializer
 from api.wikis.serializers import NodeWikiSerializer
 from framework.exceptions import HTTPError, PermissionsError
 from framework.auth.oauth_scopes import CoreScopes
-from osf.features import OSF_GROUPS
+from osf.features import flags
 from osf.models import AbstractNode
 from osf.models import (Node, PrivateLink, Institution, Comment, DraftRegistration, Registration, )
 from osf.models import OSFUser
@@ -1221,7 +1221,7 @@ class NodeGroupsList(NodeGroupsBase, generics.ListCreateAPIView, ListFilterMixin
     serializer_class = NodeGroupsSerializer
     view_name = 'node-groups'
 
-    @require_flag(OSF_GROUPS)
+    @require_flag(flags['OSF_GROUPS'])
     def get_default_queryset(self):
         return self.get_node().osf_groups
 
@@ -1256,7 +1256,7 @@ class NodeGroupsList(NodeGroupsBase, generics.ListCreateAPIView, ListFilterMixin
         context['node'] = self.get_node(check_object_permissions=False)
         return context
 
-    @require_flag(OSF_GROUPS)
+    @require_flag(flags['OSF_GROUPS'])
     def perform_create(self, serializer):
         return super(NodeGroupsList, self).perform_create(serializer)
 
@@ -1276,7 +1276,7 @@ class NodeGroupsDetail(NodeGroupsBase, generics.RetrieveUpdateDestroyAPIView):
     view_name = 'node-group-detail'
 
     # Overrides RetrieveUpdateDestroyAPIView
-    @require_flag(OSF_GROUPS)
+    @require_flag(flags['OSF_GROUPS'])
     def get_object(self):
         node = self.get_node(check_object_permissions=False)
         # Node permissions checked when group is loaded
@@ -1286,7 +1286,7 @@ class NodeGroupsDetail(NodeGroupsBase, generics.RetrieveUpdateDestroyAPIView):
         return group
 
     # Overrides RetrieveUpdateDestroyAPIView
-    @require_flag(OSF_GROUPS)
+    @require_flag(flags['OSF_GROUPS'])
     def perform_destroy(self, instance):
         node = self.get_node(check_object_permissions=False)
         auth = get_user_auth(self.request)

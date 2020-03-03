@@ -6,7 +6,7 @@ from django.utils import timezone
 from rest_framework import exceptions
 from waffle.testutils import override_switch
 
-from osf import features
+from osf.features import switches
 from osf.utils.permissions import READ
 from api.base.settings.defaults import API_BASE
 from api_tests import utils as test_utils
@@ -1662,7 +1662,7 @@ class TestPreprintDetailWithMetrics:
     # enable the ELASTICSEARCH_METRICS switch for all tests
     @pytest.fixture(autouse=True)
     def enable_elasticsearch_metrics(self):
-        with override_switch(features.ELASTICSEARCH_METRICS, active=True):
+        with override_switch(switches['ELASTICSEARCH_METRICS'], active=True):
             yield
 
     @pytest.mark.parametrize(('metric_name', 'metric_class_name'),

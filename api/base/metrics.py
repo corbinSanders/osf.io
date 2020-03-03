@@ -5,7 +5,7 @@ import waffle
 from django.utils import timezone
 
 from api.base.exceptions import InvalidQueryStringError
-from osf import features
+from osf.features import switches
 
 
 class MetricsViewMixin(object):
@@ -55,7 +55,7 @@ class MetricsViewMixin(object):
     @property
     def metrics_requested(self):
         return (
-            waffle.switch_is_active(features.ELASTICSEARCH_METRICS) and
+            waffle.switch_is_active(switches['ELASTICSEARCH_METRICS']) and
             bool(self.parse_metric_query_params(self.request.query_params))
         )
 

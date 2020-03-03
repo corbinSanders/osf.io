@@ -36,7 +36,7 @@ from website import mails
 from website import settings
 from addons.base import signals as file_signals
 from addons.base.utils import format_last_known_metadata, get_mfr_url
-from osf import features
+from osf.features import flags, switches
 from osf.models import (BaseFileNode, TrashedFileNode, BaseFileVersionsThrough,
                         OSFUser, AbstractNode, Preprint,
                         NodeLog, DraftRegistration, RegistrationSchema,
@@ -335,7 +335,7 @@ def get_auth(auth, **kwargs):
                         update_analytics(node, filenode, version_index, 'view')
                     elif action == 'download' and not from_mfr:
                         update_analytics(node, filenode, version_index, 'download')
-                    if waffle.switch_is_active(features.ELASTICSEARCH_METRICS):
+                    if waffle.switch_is_active(switches['ELASTICSEARCH_METRICS']):
                         if isinstance(node, Preprint):
                             metric_class = get_metric_class_for_action(action, from_mfr=from_mfr)
                             if metric_class:
@@ -684,7 +684,7 @@ def addon_deleted_file(auth, target, error_type='BLAME_PROVIDER', **kwargs):
 
 
 @must_be_contributor_or_public
-@ember_flag_is_active(features.EMBER_FILE_DETAIL)
+@ember_flag_is_active(flags['EMBER_FILE_DETAIL'])
 def addon_view_or_download_file(auth, path, provider, **kwargs):
     extras = request.args.to_dict()
     extras.pop('_', None)  # Clean up our url params a bit

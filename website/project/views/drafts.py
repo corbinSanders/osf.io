@@ -14,7 +14,7 @@ from framework.database import autoload
 from framework.exceptions import HTTPError
 from framework.status import push_status_message
 
-from osf import features
+from osf.features import flags, switches
 from osf.utils.sanitize import strip_html
 from osf.utils.permissions import ADMIN
 from osf.utils.functional import rapply
@@ -128,7 +128,7 @@ def submit_draft_for_review(auth, node, draft, *args, **kwargs):
     :rtype: dict
     :raises: HTTPError if embargo end date is invalid
     """
-    if waffle.switch_is_active(features.OSF_PREREGISTRATION):
+    if waffle.switch_is_active(switches['OSF_PREREGISTRATION']):
         raise HTTPError(http_status.HTTP_410_GONE, data={
             'message_short': 'The Prereg Challenge has ended',
             'message_long': 'The Prereg Challenge has ended. No new submissions are accepted at this time.'
@@ -234,7 +234,7 @@ def get_draft_registrations(auth, node, *args, **kwargs):
 @must_have_permission(ADMIN)
 @must_be_valid_project
 @must_be_contributor_and_not_group_member
-@ember_flag_is_active(features.EMBER_CREATE_DRAFT_REGISTRATION)
+@ember_flag_is_active(flags['EMBER_CREATE_DRAFT_REGISTRATION'])
 def new_draft_registration(auth, node, *args, **kwargs):
     """Create a new draft registration for the node
 
@@ -273,7 +273,7 @@ def new_draft_registration(auth, node, *args, **kwargs):
 
 @must_have_permission(ADMIN)
 @must_be_contributor_and_not_group_member
-@ember_flag_is_active(features.EMBER_EDIT_DRAFT_REGISTRATION)
+@ember_flag_is_active(flags['EMBER_EDIT_DRAFT_REGISTRATION'])
 @must_be_branched_from_node
 def edit_draft_registration_page(auth, node, draft, **kwargs):
     """Draft registration editor

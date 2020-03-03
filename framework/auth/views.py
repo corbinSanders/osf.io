@@ -34,7 +34,7 @@ from website.util import web_url_for
 from osf.exceptions import ValidationValueError, BlacklistedEmailError
 from osf.models.provider import PreprintProvider
 from osf.utils.requests import check_select_for_update
-from osf import features
+from osf.features import flags
 
 @block_bing_preview
 @collect_auth
@@ -331,7 +331,7 @@ def auth_login(auth):
 
 
 @collect_auth
-@ember_flag_is_active(features.EMBER_AUTH_REGISTER)
+@ember_flag_is_active(flags['EMBER_AUTH_REGISTER'])
 def auth_register(auth):
     """
     View for OSF register. Land on the register page, redirect or go to `auth_logout`

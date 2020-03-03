@@ -18,7 +18,7 @@ from api_tests.preprints.views.test_preprint_list_mixin import (
 )
 from api_tests.reviews.mixins.filter_mixins import ReviewableFilterMixin
 from osf.models import Preprint, Node
-from osf import features
+from osf.features import switches
 from osf.utils.workflows import DefaultStates
 from osf.utils import permissions
 from osf_tests.factories import (
@@ -1295,7 +1295,7 @@ class TestPreprintListWithMetrics:
     # enable the ELASTICSEARCH_METRICS switch for all tests
     @pytest.fixture(autouse=True)
     def enable_elasticsearch_metrics(self):
-        with override_switch(features.ELASTICSEARCH_METRICS, active=True):
+        with override_switch(switches['ELASTICSEARCH_METRICS'], active=True):
             yield
 
     @pytest.mark.parametrize(('metric_name', 'metric_class_name'),

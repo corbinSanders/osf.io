@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 from django.db import migrations
 from osf.utils.migrations import DeleteWaffleFlags
-from osf.features import EMBER_PROJECT_ANALYTICS
+from osf.features import flags
 
 
 class Migration(migrations.Migration):
@@ -11,5 +11,5 @@ class Migration(migrations.Migration):
         ('osf', '0142_remove_forks_flag'),
     ]
     operations = [
-        DeleteWaffleFlags([EMBER_PROJECT_ANALYTICS])
+        DeleteWaffleFlags([flags['EMBER_PROJECT_ANALYTICS']])
     ]

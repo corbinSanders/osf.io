@@ -9,7 +9,9 @@ from osf_tests.factories import (
     AuthUserFactory,
     OSFGroupFactory,
 )
-from osf.features import OSF_GROUPS
+from osf.features import flags
+
+OSF_GROUPS = flags['OSF_GROUPS']
 
 
 def build_member_relationship_payload(user_ids):

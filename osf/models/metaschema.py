@@ -11,7 +11,7 @@ from osf.utils.datetime_aware_jsonfield import DateTimeAwareJSONField
 from osf.exceptions import ValidationValueError, ValidationError
 
 from website.project.metadata.utils import create_jsonschema_from_metaschema
-from osf.features import EGAP_ADMINS
+from osf.features import flags
 
 
 SCHEMABLOCK_TYPES = [
@@ -36,7 +36,7 @@ def allow_egap_admins(queryset, request):
     Allows egap admins to see EGAP registrations as visible, should be deleted when when the EGAP registry goes
     live.
     """
-    if hasattr(request, 'user') and waffle.flag_is_active(request, EGAP_ADMINS):
+    if hasattr(request, 'user') and waffle.flag_is_active(request, flags['EGAP_ADMINS']):
         return queryset | RegistrationSchema.objects.filter(name='EGAP Registration').distinct('name')
     else:
         return queryset

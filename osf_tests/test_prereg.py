@@ -3,7 +3,7 @@ from nose.tools import *  # noqa: F403
 from waffle.testutils import override_switch
 
 from osf.models import RegistrationSchema
-from osf.features import OSF_PREREGISTRATION
+from osf.features import switches
 from website.prereg import prereg_landing_page as landing_page
 from website.prereg.utils import get_prereg_schema
 from website.registries.utils import drafts_for_user
@@ -31,7 +31,7 @@ class TestPreregLandingPage(OsfTestCase):
             }
         )
 
-        with override_switch(name=OSF_PREREGISTRATION, active=True):
+        with override_switch(name=switches['OSF_PREREGISTRATION'], active=True):
             assert_equal(
                 landing_page(),
                 {
@@ -57,7 +57,7 @@ class TestPreregLandingPage(OsfTestCase):
             }
         )
 
-        with override_switch(name=OSF_PREREGISTRATION, active=True):
+        with override_switch(name=switches['OSF_PREREGISTRATION'], active=True):
             assert_equal(
                 landing_page(user=self.user),
                 {
@@ -85,7 +85,7 @@ class TestPreregLandingPage(OsfTestCase):
             }
         )
 
-        with override_switch(name=OSF_PREREGISTRATION, active=True):
+        with override_switch(name=switches['OSF_PREREGISTRATION'], active=True):
             assert_equal(
                 landing_page(user=self.user),
                 {
@@ -119,7 +119,7 @@ class TestPreregLandingPage(OsfTestCase):
             }
         )
 
-        with override_switch(name=OSF_PREREGISTRATION, active=True):
+        with override_switch(name=switches['OSF_PREREGISTRATION'], active=True):
             prereg_schema = RegistrationSchema.objects.get(name='OSF Preregistration')
             factories.DraftRegistrationFactory(
                 initiator=self.user,

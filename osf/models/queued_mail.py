@@ -8,7 +8,7 @@ from website.mails import Mail, send_mail
 from website.mails import presends
 from website import settings as osf_settings
 
-from osf import features
+from osf.features import switches
 from osf.models.base import BaseModel, ObjectIDMixin
 from osf.utils.datetime_aware_jsonfield import DateTimeAwareJSONField
 
@@ -91,7 +91,7 @@ def queue_mail(to_addr, mail, send_at, user, **context):
                     not parameters.
     :return: the QueuedMail object created
     """
-    if waffle.switch_is_active(features.DISABLE_ENGAGEMENT_EMAILS) and mail.get('engagement', False):
+    if waffle.switch_is_active(switches['DISABLE_ENGAGEMENT_EMAILS']) and mail.get('engagement', False):
         return False
     new_mail = QueuedMail(
         user=user,

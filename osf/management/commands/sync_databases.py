@@ -10,7 +10,7 @@ the OSF's helm chart.
 import waffle
 from django.core.management.base import BaseCommand
 from django.core.management import call_command
-from osf import features
+from osf.features import switches
 
 class Command(BaseCommand):
 
@@ -19,7 +19,7 @@ class Command(BaseCommand):
             # Sync Postgres
             ['migrate'],
         ]
-        if waffle.switch_is_active(features.ELASTICSEARCH_METRICS):
+        if waffle.switch_is_active(switches['ELASTICSEARCH_METRICS']):
             COMMANDS.append(['sync_metrics'])
 
         for check in COMMANDS:

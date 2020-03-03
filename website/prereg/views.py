@@ -12,10 +12,10 @@ Other resources that are a part of the Prereg Challenge:
 import waffle
 
 from website.registries import views
-from osf import features
+from osf.features import switches
 
 def prereg_landing_page(**kwargs):
     """Landing page for osf prereg"""
-    if waffle.switch_is_active(features.OSF_PREREGISTRATION):
+    if waffle.switch_is_active(switches['OSF_PREREGISTRATION']):
         return views._view_registries_landing_page('prereg', **kwargs)
     return views._view_registries_landing_page('prereg_challenge', **kwargs)

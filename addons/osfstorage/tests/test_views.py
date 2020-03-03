@@ -26,7 +26,7 @@ from website.util import rubeus, api_url_for
 from framework.auth import cas
 from api.caching.utils import storage_usage_cache
 
-from osf import features
+from osf.features import flags, switches
 from osf.models import Tag, QuickFilesNode
 from osf.models import files as models
 from addons.osfstorage.apps import osf_storage_root
@@ -447,19 +447,19 @@ class TestUploadFileHook(HookTestCase):
         key = STORAGE_USAGE_KEY.format(target_id=self.node._id)
         assert storage_usage_cache.get(key) is None
 
-        with override_flag(features.STORAGE_USAGE, active=True):
+        with override_flag(flags['STORAGE_USAGE'], active=True):
             self.send_upload_hook(parent, payload=self.make_payload(name=name))
         assert storage_usage_cache.get(key) == 123
 
         # Don't update the cache for duplicate uploads
-        with override_flag(features.STORAGE_USAGE, active=True):
+        with override_flag(flags['STORAGE_USAGE'], active=True):
             self.send_upload_hook(parent, payload=self.make_payload(name=name))
         assert storage_usage_cache.get(key) == 123
 
         # Do update the cache for new versions
         payload = self.make_payload(name=name)
         payload['metadata']['name'] = 'new hash'
-        with override_flag(features.STORAGE_USAGE, active=True):
+        with override_flag(flags['STORAGE_USAGE'], active=True):
             self.send_upload_hook(parent, payload=payload)
         assert storage_usage_cache.get(key) == 246
 
@@ -986,7 +986,7 @@ class TestDeleteHookProjectOnly(DeleteHook):
         file = create_record_with_version('new file', self.node_settings, size=123)
         assert self.node.storage_usage == 123
 
-        with override_flag(name=features.STORAGE_USAGE, active=True):
+        with override_flag(name=flags['STORAGE_USAGE'], active=True):
             resp = self.delete(file)
 
         assert_equal(resp.status_code, 200)
@@ -1330,7 +1330,7 @@ class TestMoveHookProjectsOnly(TestMoveHook):
         file = create_record_with_version('new file', self.node_settings, size=123)
         folder = self.root_node.append_folder('Nina Simone')
 
-        with override_flag(features.STORAGE_USAGE, active=True):
+        with override_flag(flags['STORAGE_USAGE'], active=True):
             res = self.send_hook(
                 'osfstorage_move_hook',
                 {'guid': self.root_node.target._id},
@@ -1367,7 +1367,7 @@ class TestMoveHookProjectsOnly(TestMoveHook):
         assert self.project.storage_usage == 123
         assert other_target.storage_usage == 0
 
-        with override_flag(features.STORAGE_USAGE, active=True):
+        with override_flag(flags['STORAGE_USAGE'], active=True):
             res = self.send_hook(
                 'osfstorage_move_hook',
                 {'guid': self.root_node.target._id},
@@ -1442,7 +1442,7 @@ class TestCopyHook(HookTestCase):
         assert self.project.storage_usage == 123
         assert other_target.storage_usage == 0
 
-        with override_flag(features.STORAGE_USAGE, active=True):
+        with override_flag(flags['STORAGE_USAGE'], active=True):
             res = self.send_hook(
                 'osfstorage_copy_hook',
                 {'guid': self.root_node.target._id},
