@@ -46,6 +46,7 @@ def after_request(resp):
             domain=api_settings.CSRF_COOKIE_DOMAIN,
             path=api_settings.CSRF_COOKIE_PATH,
             httponly=api_settings.CSRF_COOKIE_HTTPONLY,
+            samesite=api_settings.CSRF_COOKIE_SAMESITE,
         )
 
     return resp

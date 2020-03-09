@@ -65,6 +65,7 @@ SESSION_COOKIE_SAMESITE = osf_settings.SESSION_COOKIE_SAMESITE
 CSRF_COOKIE_NAME = 'api-csrf'
 CSRF_COOKIE_SECURE = osf_settings.SECURE_MODE
 CSRF_COOKIE_HTTPONLY = osf_settings.SECURE_MODE
+CSRF_COOKIE_SAMESITE = None
 
 ALLOWED_HOSTS = [
     '.osf.io',
@@ -212,6 +213,7 @@ CORS_ALLOW_CREDENTIALS = True
 ORIGINS_WHITELIST = ()
 
 MIDDLEWARE = (
+    'django_cookies_samesite.middleware.CookiesSameSite',
     'api.base.middleware.DjangoGlobalMiddleware',
     'api.base.middleware.CeleryTaskMiddleware',
     'api.base.middleware.PostcommitTaskMiddleware',
