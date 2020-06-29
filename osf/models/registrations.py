@@ -104,6 +104,7 @@ class Registration(AbstractNode):
                                                     null=True, blank=True,
                                                     on_delete=models.SET_NULL)
     files_count = models.PositiveIntegerField(blank=True, null=True)
+    branched_from_node = models.NullBooleanField(blank=True, null=True)
 
     @staticmethod
     def find_failed_registrations():
