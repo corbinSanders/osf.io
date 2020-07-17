@@ -20,7 +20,6 @@ Please make verification statements inspired by your code and what your code tou
 
 What are the areas of risk?
 Any concerns/considerations/questions that development raised?
-  
 
 ## Documentation
 
