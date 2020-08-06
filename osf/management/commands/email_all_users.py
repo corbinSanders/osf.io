@@ -11,7 +11,6 @@ import django
 django.setup()
 
 from django.core.management.base import BaseCommand
-from framework.celery_tasks import app as celery_app
 from framework import sentry
 
 from website import mails
@@ -22,7 +21,6 @@ logger = logging.getLogger(__name__)
 
 OFFSET = 500000
 
-@celery_app.task(name='management.commands.email_all_users')
 def email_all_users(email_template, dry_run=False, ids=None, run=0, offset=OFFSET):
 
     if ids:
@@ -77,7 +75,7 @@ class Command(BaseCommand):
 
         parser.add_argument(
             '--t',
-            action='store_true',
+            type='str',
             dest='template',
             required=True,
             help='Specify which template to use',
@@ -85,21 +83,22 @@ class Command(BaseCommand):
 
         parser.add_argument(
             '--r',
-            action='store_true',
+            type='int',
             dest='run',
             help='Specify which run this is',
         )
 
         parser.add_argument(
             '--ids',
-            action='store_true',
+            type='int',
+            action='extend',
             dest='ids',
             help='Specific IDs to email, otherwise will email all users',
         )
 
         parser.add_argument(
             '--o',
-            action='store_true',
+            type='int',
             dest='offset',
             help=f'How many users to email in this run, default is {OFFSET}',
         )
