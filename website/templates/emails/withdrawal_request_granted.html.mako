@@ -29,12 +29,12 @@
         % elif force_withdrawal:
             A moderator has withdrawn your ${document_type} <a href="${reviewable.absolute_url}">"${reviewable.title}"</a> from ${reviewable.provider.name}.
             <br>
-            The ${document_type} has been removed from ${reviewable.provider.name}, but its metadata is still available: title of the withdrawn ${document_type}, its contributor list, abstract, tags, DOI, and reason for withdrawal (if provided). The moderator has provided the following justification: "${reviewable.withdrawal_justification}"
+            The ${document_type} has been removed from ${reviewable.provider.name}, but its metadata is still available: title of the withdrawn ${document_type}, its contributor list, abstract, tags, and DOI. The moderator has provided the following justification: "${reviewable.withdrawal_justification}".
             <br>
         % else:
             ${requester.fullname} has withdrawn your ${document_type} <a href="${reviewable.absolute_url}">"${reviewable.title}"</a> from ${reviewable.provider.name}.
             <br>
-            The ${document_type} has been removed from ${reviewable.provider.name}, but its metadata is still available: title of the withdrawn ${document_type}, its contributor list, abstract, tags, DOI, and reason for withdrawal (if provided). ${requester.fullname} provided the following justification: "${reviewable.withdrawal_justification}"
+            The ${document_type} has been removed from ${reviewable.provider.name}, but its metadata is still available: title of the withdrawn ${document_type}, its contributor list, abstract, tags, and DOI. ${requester.fullname} provided the following justification: "${reviewable.withdrawal_justification}".
             <br>
         % endif
     % endif
