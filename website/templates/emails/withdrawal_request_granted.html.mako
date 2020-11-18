@@ -15,8 +15,11 @@
             The ${document_type} has been removed from ${reviewable.provider.name}.
             <br>
         % else:
-            ${requester.fullname} has withdrawn your ${document_type} <a href="${reviewable.absolute_url}">"${reviewable.title}"</a> from ${reviewable.provider.name}. ${requester.fullname} provided the following justification: "${reviewable.withdrawal_justification}"
-            <br>
+            ${requester.fullname} has withdrawn your ${document_type} <a href="${reviewable.absolute_url}">"${reviewable.title}"</a> from ${reviewable.provider.name}.
+            % if reviewable.withdrawal_justification:
+                ${requester.fullname} provided the following justification: "${reviewable.withdrawal_justification}"
+                <br>
+            % endif
             The ${document_type} has been removed from ${reviewable.provider.name}.
             <br>
         % endif
@@ -29,13 +32,19 @@
         % elif force_withdrawal:
             A moderator has withdrawn your ${document_type} <a href="${reviewable.absolute_url}">"${reviewable.title}"</a> from ${reviewable.provider.name}.
             <br>
-            The ${document_type} has been removed from ${reviewable.provider.name}, but its metadata is still available: title of the withdrawn ${document_type}, its contributor list, abstract, tags, and DOI. The moderator has provided the following justification: "${reviewable.withdrawal_justification}".
-            <br>
+            The ${document_type} has been removed from ${reviewable.provider.name}, but its metadata is still available: title of the withdrawn ${document_type}, its contributor list, abstract, tags, and DOI.
+            % if reviewable.withdrawal_justification:
+                The moderator has provided the following justification: "${reviewable.withdrawal_justification}".
+                <br>
+            % endif
         % else:
             ${requester.fullname} has withdrawn your ${document_type} <a href="${reviewable.absolute_url}">"${reviewable.title}"</a> from ${reviewable.provider.name}.
             <br>
-            The ${document_type} has been removed from ${reviewable.provider.name}, but its metadata is still available: title of the withdrawn ${document_type}, its contributor list, abstract, tags, and DOI. ${requester.fullname} provided the following justification: "${reviewable.withdrawal_justification}".
-            <br>
+            The ${document_type} has been removed from ${reviewable.provider.name}, but its metadata is still available: title of the withdrawn ${document_type}, its contributor list, abstract, tags, and DOI.
+            % if reviewable.withdrawal_justification:
+                ${requester.fullname} provided the following justification: "${reviewable.withdrawal_justification}".
+                <br>
+            % endif
         % endif
     % endif
         <br>
