@@ -501,7 +501,6 @@ class CeleryConfig:
         'osf.management.commands.deactivate_requested_accounts',
         'osf.management.commands.check_crossref_dois',
         'osf.management.commands.update_institution_project_counts',
-        'osf.management.commands.correct_registration_moderation_states',
     )
 
     # Modules that need metrics and release requirements
@@ -1880,6 +1879,7 @@ SPAM_ACCOUNT_SUSPENSION_ENABLED = False
 SPAM_ACCOUNT_SUSPENSION_THRESHOLD = timedelta(hours=24)
 SPAM_FLAGGED_MAKE_NODE_PRIVATE = False
 SPAM_FLAGGED_REMOVE_FROM_SEARCH = False
+SPAM_THROTTLE_AUTOBAN = True
 
 SHARE_API_TOKEN = None
 
